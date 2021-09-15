@@ -4,7 +4,7 @@ passmark_link=https://www.passmark.com/downloads/pt_linux_x64.zip
 iozone_link=http://www.iozone.org/src/current/iozone-3-491.x86_64.rpm
 passmark_dir="/passmark_lib"
 log_file_name="prescript.log"
-centos_ver="`cat /etc/redhat-release | cut -d " " -f 4 | awk -F[.] '{print $1}'`"
+centos_ver="`cat /etc/redhat-release > /dev/null 2>&1 | cut -d " " -f 4 | awk -F[.] '{print $1}'`"
 
 # Colors
 RED='\033[0;31m'
@@ -27,7 +27,7 @@ wget -q $passmark_link -O pt_linux_x64.zip > /dev/null 2>&1
 unzip -d $PWD pt_linux_x64.zip > /dev/null 2>&1
 
 # Make some changes to lib
-if [ $centos_ver == "7" ]
+if [[ $centos_ver == "7" ]]
 then
     mkdir -p $passmark_dir
     ls -l /lib64/libstdc++.so.6 > $passmark_dir/vagranlib.bk
@@ -49,7 +49,7 @@ rm -rf ./pt_linux_x64
 ## Install iozone
 if [ ! -e '/opt/iozone/bin/iozone' ];
 then
-    wget $iozone_link -O iozone-3-491.x86_64.rpm > /dev/null 2>&1 &&  sudo rpm -Uvh ./iozone-3-491.x86_64.rpm > /dev/null 2>&1 || apt-get install iozone -y > /dev/null 2>&1
+    wget $iozone_link -O iozone-3-491.x86_64.rpm > /dev/null 2>&1 &&  sudo rpm -Uvh ./iozone-3-491.x86_64.rpm > /dev/null 2>&1 || apt-get install iozone3 -y > /dev/null 2>&1
     ln -s /opt/iozone/bin/iozone /usr/bin/iozone
     rm -rf iozone-3-491.x86_64.rpm
 
