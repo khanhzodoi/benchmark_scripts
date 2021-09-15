@@ -146,6 +146,26 @@ passmark_cpu() {
 
 passmark_memory() {  
 	# Tuong 
+	pt_linux_x64 -p 2 -i 2 -d 2 -r 2
+
+	local FILE=results_memory.yml
+	
+
+	sed -i "30s/ME_ALLOC_S/Database Operations/" $FILE
+	sed -i "30s/$/ Thousand Operations\/s/" $FILE
+	sed -i "31s/ME_READ_S/Memory Read Cached/" $FILE
+	sed -i "31s/$/ MB\/s/" $FILE
+	sed -i "32s/ME_READ_L/Memory Read Uncached/" $FILE
+	sed -i "32s/$/ MB\/s/" $FILE
+	sed -i "33s/ME_WRITE/Memory Write/" $FILE
+	sed -i "33s/$/ MB\/s/" $FILE
+	sed -i "34s/ME_LARGE/Available RAM/" $FILE
+	sed -i "35s/ME_LATENCY/Memory Latency/" $FILE
+	sed -i "35s/$/ Nanoseconds/" $FILE
+	sed -i "36s/ME_THREADED/Memory Threaded/" $FILE
+
+	sed -n '30,36p;37q' $FILE
+
 }
 
 iozone_filesystem() {
@@ -183,6 +203,9 @@ test() {
 	next
 	printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
 	speed && next
+	echo "Memory Test"
+	next
+	passmark_memory && next
 }
 
 
