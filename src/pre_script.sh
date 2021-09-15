@@ -50,7 +50,7 @@ rm -rf ./pt_linux_x64
 if [ ! -e '/opt/iozone/bin/iozone' ];
 then
     wget $iozone_link -O iozone-3-491.x86_64.rpm > /dev/null 2>&1 &&  sudo rpm -Uvh ./iozone-3-491.x86_64.rpm > /dev/null 2>&1 || apt-get install iozone3 -y > /dev/null 2>&1
-    ln -s /opt/iozone/bin/iozone /usr/bin/iozone
+    ln -s /opt/iozone/bin/iozone /usr/bin/iozone > /dev/null 2>&1
     rm -rf iozone-3-491.x86_64.rpm
 
 fi
