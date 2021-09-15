@@ -86,13 +86,39 @@ passmark_memory() {
 }
 
 iozone_filesystem() {
-	# Son 
+	# Son
+	if [ -e '/usr/bin/iozone' ]; then
+		echo "Filesystem benchmark with IOZone"
+		local TEST_FILE_SIZE=5242880 #file size temporary iozone using to test, recommend x3 size of memmory. Reference https://www.thegeekstuff.com/2011/05/iozone-examples/
+		local TEST_RECORD_SIZE=1024 #1M 
+		local name_output_file="/tmp/$(date +%Y-%m-%d_%H-%M-%S).iozone"
+
+		echo "$(iozone -s $TEST_FILE_SIZE -r $TEST_RECORD_SIZE -i 0 -i 1 -i 2 -b tmp_file)" > "$name_output_file"
+
+        local initial_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($3)}'`
+        local rewrite=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($4)}'`
+        local read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($5)}'`
+        local re_read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($6)}'`
+        local rand_read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($7)}'`
+        local rand_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($8)}'`
+
+		printf "Write performance			:${GREEN}%-16s${PLAIN}\n" "${initial_write}kB/s"
+		printf "Re-write performance			:${GREEN}%-16s${PLAIN}\n" "${rewrite}kB/s"
+		printf "Read performance			:${GREEN}%-16s${PLAIN}\n" "${read}kB/s"
+		printf "Re_read performance			:${GREEN}%-16s${PLAIN}\n" "${re_read}kB/s"
+		printf "Random-write performance		:${GREEN}%-16s${PLAIN}\n" "${rand_write}kB/s"
+		printf "Random-read performance			:${GREEN}%-16s${PLAIN}\n" "${rand_read}kB/s"
+        rm -f tmp_file
+		rm -f "/tmp/$name_output_file" #remove log file
+	else
+		echo "IOZone is missing!!! Please install IOZone before running test."
+	fi
 }
 
 
 test() {
 
-	echo "Date                 : $date"
+	echo "Date                 : $(date +%Y-%m-%d_%H-%M-%S)"
 	echo ""
 	echo "Disk Speed"
 	next
@@ -106,6 +132,7 @@ test() {
 	next
 	printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
 	speed && next
+	iozone_filesystem
 }
 
 
