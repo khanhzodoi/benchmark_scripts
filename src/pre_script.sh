@@ -4,6 +4,7 @@ passmark_link=https://www.passmark.com/downloads/pt_linux_x64.zip
 iozone_link=http://www.iozone.org/src/current/iozone-3-491.x86_64.rpm
 passmark_dir="/passmark_lib"
 log_file_name="prescript.log"
+centos_ver="`cat /etc/redhat-release | cut -d " " -f 4 | awk -F[.] '{print $1}'`"
 
 # Colors
 RED='\033[0;31m'
@@ -15,7 +16,7 @@ PLAIN='\033[0m'
 [[ $EUID -ne 0 ]] && echo -e "${RED}Error:${PLAIN} This script must be run as root!" && exit 1
 
 ## Install wget, unzip, fio
-if [ ! -e '/usr/bin/wget' ] || [ ! -e '/usr/bin/fio' ] || [ ! -e '/usr/bin/unzip' ] || [ ! -e '/usr/bin/unzip' ]
+if [ ! -e '/usr/bin/wget' ] || [ ! -e '/usr/bin/fio' ] || [ ! -e '/usr/bin/unzip' ] || [ ! -e '/usr/bin/git' ]
 then
     yum clean all > /dev/null 2>&1 && yum install -y epel-release > /dev/null 2>&1 && yum install -y wget fio unzip git > /dev/null 2>&1 || (  apt-get update > /dev/null 2>&1 && apt-get install -y wget fio unzip git > /dev/null 2>&1 )
 fi
@@ -26,18 +27,21 @@ wget -q $passmark_link -O pt_linux_x64.zip > /dev/null 2>&1
 unzip -d $PWD pt_linux_x64.zip > /dev/null 2>&1
 
 # Make some changes to lib
-mkdir -p $passmark_dir
-ls -l /lib64/libstdc++.so.6 > $passmark_dir/vagranlib.bk
-cd $passmark_dir && git clone https://github.com/DevopsRizwan/requiredlibbin.git > /dev/null 2>&1
-cp "$passmark_dir/requiredlibbin/libstdc++.so.6.0.20" /lib64/libstdc++.so.6.0.20
-chmod +x /lib64/libstdc++.so.6.0.20
-unlink /lib64/libstdc++.so.6
-ln -s  /lib64/libstdc++.so.6.0.20 /lib64/libstdc++.so.6
+if [ $centos_ver == "7" ]
+then
+    mkdir -p $passmark_dir
+    ls -l /lib64/libstdc++.so.6 > $passmark_dir/vagranlib.bk
+    cd $passmark_dir && git clone https://github.com/DevopsRizwan/requiredlibbin.git > /dev/null 2>&1
+    cp "$passmark_dir/requiredlibbin/libstdc++.so.6.0.20" /lib64/libstdc++.so.6.0.20
+    chmod +x /lib64/libstdc++.so.6.0.20
+    unlink /lib64/libstdc++.so.6
+    ln -s  /lib64/libstdc++.so.6.0.20 /lib64/libstdc++.so.6
 
-cd - > /dev/null 2>&1
-echo "Created $passmark_dir folder to download lib for running passmark" >> $log_file_name
-echo "Backup old soft link of /lib64/libstdc++.so.6 at $passmark_dir/vagranlib.bk file." >> $log_file_name
-echo "===========================" >> $log_file_name
+    cd $PWD > /dev/null 2>&1
+    echo "Created $passmark_dir folder to download lib for running passmark" >> $log_file_name
+    echo "Backup old soft link of /lib64/libstdc++.so.6 at $passmark_dir/vagranlib.bk file." >> $log_file_name
+    echo "===========================" >> $log_file_name
+fi
 
 cp pt_linux_x64 /usr/bin/pt_linux_x64
 rm -rf ./pt_linux_x64

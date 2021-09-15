@@ -50,38 +50,101 @@ fio_test() {
 	# Khanh
 	if [ -e '/usr/bin/fio' ]; then
 		echo "Fio Test"
-		local tmp=$(mktemp)
-		fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=fio_test --filename=fio_test --bs=4k --numjobs=1 --iodepth=64 --size=256M --readwrite=randrw --rwmixread=75 --runtime=30 --time_based --output="$tmp"
-		
-		if [ $(fio -v | cut -d '.' -f 1) == "fio-2" ]; then
-			local iops_read=`grep "iops=" "$tmp" | grep read | awk -F[=,]+ '{print $6}'`
-			local iops_write=`grep "iops=" "$tmp" | grep write | awk -F[=,]+ '{print $6}'`
-			local bw_read=`grep "bw=" "$tmp" | grep read | awk -F[=,B]+ '{if(match($4, /[0-9]+K$/)) {printf("%.1f", int($4)/1024);} else if(match($4, /[0-9]+M$/)) {printf("%.1f", substr($4, 0, length($4)-1))} else {printf("%.1f", int($4)/1024/1024);}}'`"MB/s"
-			local bw_write=`grep "bw=" "$tmp" | grep write | awk -F[=,B]+ '{if(match($4, /[0-9]+K$/)) {printf("%.1f", int($4)/1024);} else if(match($4, /[0-9]+M$/)) {printf("%.1f", substr($4, 0, length($4)-1))} else {printf("%.1f", int($4)/1024/1024);}}'`"MB/s"
-			
-		elif [ $(fio -v | cut -d '.' -f 1) == "fio-3" ]; then
-			local iops_read=`grep "IOPS=" "$tmp" | grep read | awk -F[=,]+ '{print $2}'`
-			local iops_write=`grep "IOPS=" "$tmp" | grep write | awk -F[=,]+ '{print $2}'`
-			local bw_read=`grep "bw=" "$tmp" | grep READ | awk -F"[()]" '{print $2}'`
-			local bw_write=`grep "bw=" "$tmp" | grep WRITE | awk -F"[()]" '{print $2}'`
-		fi
+		local tmp_1=$(mktemp)
+		local tmp_2=$(mktemp)
+		local tmp_3=$(mktemp)
+		local tmp_4=$(mktemp)
+		local test_dir="/tmp/fio_test"
+		mkdir $test_dir > /dev/null 2>&1
 
-		echo "Read performance     : $bw_read"
-		echo "Read IOPS            : $iops_read"
-		echo "Write performance    : $bw_write"
-		echo "Write IOPS           : $iops_write"
-		
-		rm -f $tmp fio_test
+		sudo fio --name=write_throughput --directory=$test_dir --numjobs=8 --size=4G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --output="$tmp_1"
+		if [ $(fio -v | cut -d '.' -f 1) == "fio-2" ]; then
+			local seq_iops_write=`grep "iops=" "$tmp_1" | grep write | awk -F[=,]+ '{print $6}'`
+			local seq_bw_write=`grep "bw=" "$tmp_1" | grep write | awk -F[=,B]+ '{if(match($4, /[0-9]+K$/)) {printf("%.1f", int($4)/1024);} else if(match($4, /[0-9]+M$/)) {printf("%.1f", substr($4, 0, length($4)-1))} else {printf("%.1f", int($4)/1024/1024);}}'`"MB/s"
+		elif [ $(fio -v | cut -d '.' -f 1) == "fio-3" ]; then
+			local seq_iops_write=`grep "IOPS=" "$tmp_1" | grep write | awk -F[=,]+ '{print $2}'`
+			local seq_bw_write=`grep "bw=" "$tmp_1" | grep WRITE | awk -F"[()]" '{print $2}'`
+		fi
+		rm -rf $test_dir/*
+
+		sudo fio --name=write_iops --directory=$test_dir --size=4G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4K --iodepth=64 --rw=randwrite --group_reporting=1 --output="$tmp_2"
+		if [ $(fio -v | cut -d '.' -f 1) == "fio-2" ]; then
+			local rand_iops_write=`grep "iops=" "$tmp_2" | grep write | awk -F[=,]+ '{print $6}'`
+			local rand_bw_write=`grep "bw=" "$tmp_2" | grep write | awk -F[=,B]+ '{if(match($4, /[0-9]+K$/)) {printf("%.1f", int($4)/1024);} else if(match($4, /[0-9]+M$/)) {printf("%.1f", substr($4, 0, length($4)-1))} else {printf("%.1f", int($4)/1024/1024);}}'`"MB/s"
+		elif [ $(fio -v | cut -d '.' -f 1) == "fio-3" ]; then
+			local rand_iops_write=`grep "IOPS=" "$tmp_2" | grep write | awk -F[=,]+ '{print $2}'`
+			local rand_bw_write=`grep "bw=" "$tmp_2" | grep WRITE | awk -F"[()]" '{print $2}'`
+		fi
+		rm -rf $test_dir/*
+
+		sudo fio --name=read_throughput --directory=$test_dir --numjobs=8 --size=4G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=read --group_reporting=1 --output="$tmp_3"
+		if [ $(fio -v | cut -d '.' -f 1) == "fio-2" ]; then
+			local seq_iops_read=`grep "iops=" "$tmp_3" | grep read | awk -F[=,]+ '{print $6}'`
+			local seq_bw_read=`grep "bw=" "$tmp_3" | grep read | awk -F[=,B]+ '{if(match($4, /[0-9]+K$/)) {printf("%.1f", int($4)/1024);} else if(match($4, /[0-9]+M$/)) {printf("%.1f", substr($4, 0, length($4)-1))} else {printf("%.1f", int($4)/1024/1024);}}'`"MB/s"			
+		elif [ $(fio -v | cut -d '.' -f 1) == "fio-3" ]; then
+			local seq_iops_read=`grep "IOPS=" "$tmp_3" | grep read | awk -F[=,]+ '{print $2}'`
+			local seq_bw_read=`grep "bw=" "$tmp_3" | grep READ | awk -F"[()]" '{print $2}'`
+		fi
+		rm -rf $test_dir/*
+
+		sudo fio --name=read_iops --directory=$test_dir --size=4G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4K --iodepth=64 --rw=randread --group_reporting=1 --output="$tmp_4"
+		if [ $(fio -v | cut -d '.' -f 1) == "fio-2" ]; then
+			local rand_iops_read=`grep "iops=" "$tmp_4" | grep read | awk -F[=,]+ '{print $6}'`
+			local rand_bw_read=`grep "bw=" "$tmp_4" | grep read | awk -F[=,B]+ '{if(match($4, /[0-9]+K$/)) {printf("%.1f", int($4)/1024);} else if(match($4, /[0-9]+M$/)) {printf("%.1f", substr($4, 0, length($4)-1))} else {printf("%.1f", int($4)/1024/1024);}}'`"MB/s"			
+		elif [ $(fio -v | cut -d '.' -f 1) == "fio-3" ]; then
+			local rand_iops_read=`grep "IOPS=" "$tmp_4" | grep read | awk -F[=,]+ '{print $2}'`
+			local rand_bw_read=`grep "bw=" "$tmp_4" | grep READ | awk -F"[()]" '{print $2}'`
+		fi
+		rm -rf $test_dir/*
+
+		echo -e "Random read performance      : ${RED}IOPS =${PLAIN} $rand_iops_read, BW = $rand_bw_read"
+		echo -e "Random write performance     : ${RED}IOPS =${PLAIN} $rand_iops_write, BW = $rand_bw_write"
+		echo -e "Sequential read perfomance   : IOPS = $seq_iops_read, ${RED}BW =${PLAIN} $seq_bw_read"
+		echo -e "Sequential write performance : IOPS = $seq_iops_write, ${RED}BW =${PLAIN} $seq_bw_write"
+
+		# Cleanup temp files
+		rm -rf $tmp_1 $tmp_2 $tmp_3 $tmp_4 $test_dir
 	else
 		echo "Fio is missing!!! Please install Fio before running test."
 	fi
 }
 
 passmark_cpu() {
-	# Khanh 
+	# Khanh
+	if [ -e '/usr/bin/pt_linux_x64' ]; then
+		echo "Passmark Test"
+		local result_filename="results_cpu.yml"
+
+		cd /tmp > /dev/null 2>&1 
+		pt_linux_x64 -p 4 -i 3 -d 2 -r 1 > /dev/null 2>&1
+
+		local cpu_integer_math=`grep "CPU_INTEGER_MATH:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
+		local cpu_floatingpoint_math=`grep "CPU_FLOATINGPOINT_MATH:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
+		local cpu_sorting=`grep "CPU_SORTING:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Primes/s", $1)}'`
+		local cpu_prime=`grep "CPU_PRIME:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Thousand Strings/s", $1)}'`
+		local cpu_encryption=`grep "CPU_ENCRYPTION:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f MB/s", $1)}'`
+		local cpu_compression=`grep "CPU_COMPRESSION:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f MB/s", $1)}'`
+		local cpu_sse=`grep "CPU_sse:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Matrices/s", $1)}'`
+		local cpu_singlethreaded=`grep "CPU_SINGLETHREAD:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
+
+		echo "Integer Math               : $cpu_integer_math"
+		echo "Floating Point Math        : $cpu_floatingpoint_math"
+		echo "Prime Numbers              : $cpu_prime"
+		echo "Sorting                    : $cpu_sorting"
+		echo "Encryption                 : $cpu_encryption"
+		echo "Compression                : $cpu_compression"
+		echo "CPU Single Threaded        : $cpu_singlethreaded"
+		echo "Extended Instructions(SSE) : $cpu_sse"
+
+		rm -rf /tmp/results_cpu.yml
+		cd - > /dev/null 2>&1
+
+	else
+		echo "Passmark is missing!!! Please install Passmark before running test."
+	fi
 }
 
-passmark_memory() {
+passmark_memory() {  
 	# Tuong 
 }
 
@@ -91,18 +154,32 @@ iozone_filesystem() {
 
 
 test() {
+	date=$( date )
 
 	echo "Date                 : $date"
 	echo ""
-	echo "Disk Speed"
-	next
-	fio_test $cores
-	echo ""
+
 	echo "CPU Speed"
 	next
-	sysbench_cpu && next
+	passmark_cpu && next
 	echo ""
-	echo "Speedtest"
+
+	echo "Memory Speed"
+	next
+	passmark_memory && next
+	echo ""
+	
+	echo "Filesystem Speed"
+	next
+	iozone_filesystem
+	echo ""
+
+	echo "Disk Speed"
+	next
+	fio_test
+	echo ""
+
+	echo "Network Speedtest"
 	next
 	printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
 	speed && next
@@ -113,3 +190,4 @@ clear
 tmp=$(mktemp)
 test | tee $tmp
 cat $tmp >> ~/benchmark.log
+rm -rf $tmp
