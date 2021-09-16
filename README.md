@@ -11,3 +11,8 @@
 ## Usage instructions
 1. Run src/pre_script.sh first to install tools
 2. Run src/benchmark_script.sh to benchmark. 
+
+
+## OS Requirements
+1. Tested on CentOS 7/8
+2. Tested on Ubuntu 21.04
