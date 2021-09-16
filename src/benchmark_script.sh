@@ -115,7 +115,7 @@ passmark_cpu() {
 		echo "Passmark Test"
 		local result_filename="results_cpu.yml"
 
-		cd /tmp > /dev/null 2>&1 
+		cd /tmp > /dev/null 2>&1
 		pt_linux_x64 -p 4 -i 3 -d 2 -r 1 > /dev/null 2>&1
 
 		local cpu_integer_math=`grep "CPU_INTEGER_MATH:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
@@ -146,44 +146,53 @@ passmark_cpu() {
 
 passmark_memory() {  
 	# Tuong 
-	pt_linux_x64 -p 2 -i 2 -d 2 -r 2
+	if [ -e '/usr/bin/pt_linux_x64' ]; then
+		echo "Passmark Test"
+		local FILE=results_memory.yml
 
-	local FILE=results_memory.yml
-	
+		cd /tmp > /dev/null 2>&1
+		pt_linux_x64 -p 2 -i 2 -d 2 -r 2 > /dev/null 2>&1
 
-	sed -i "30s/ME_ALLOC_S/Database Operations/" $FILE
-	sed -i "30s/$/ Thousand Operations\/s/" $FILE
-	sed -i "31s/ME_READ_S/Memory Read Cached/" $FILE
-	sed -i "31s/$/ MB\/s/" $FILE
-	sed -i "32s/ME_READ_L/Memory Read Uncached/" $FILE
-	sed -i "32s/$/ MB\/s/" $FILE
-	sed -i "33s/ME_WRITE/Memory Write/" $FILE
-	sed -i "33s/$/ MB\/s/" $FILE
-	sed -i "34s/ME_LARGE/Available RAM/" $FILE
-	sed -i "35s/ME_LATENCY/Memory Latency/" $FILE
-	sed -i "35s/$/ Nanoseconds/" $FILE
-	sed -i "36s/ME_THREADED/Memory Threaded/" $FILE
+		sed -i "30s/ME_ALLOC_S/Database Operations/" $FILE
+		sed -i "30s/$/ Thousand Operations\/s/" $FILE
+		sed -i "31s/ME_READ_S/Memory Read Cached/" $FILE
+		sed -i "31s/$/ MB\/s/" $FILE
+		sed -i "32s/ME_READ_L/Memory Read Uncached/" $FILE
+		sed -i "32s/$/ MB\/s/" $FILE
+		sed -i "33s/ME_WRITE/Memory Write/" $FILE
+		sed -i "33s/$/ MB\/s/" $FILE
+		sed -i "34s/ME_LARGE/Available RAM/" $FILE
+		sed -i "35s/ME_LATENCY/Memory Latency/" $FILE
+		sed -i "35s/$/ Nanoseconds/" $FILE
+		sed -i "36s/ME_THREADED/Memory Threaded/" $FILE
 
-	sed -n '30,36p;37q' $FILE
+		sed -n '30,36p;37q' $FILE
+
+		rm -rf /tmp/$FILE
+		cd - > /dev/null 2>&1
+
+	else
+		echo "Passmark is missing!!! Please install Passmark before running test."
+	fi
 
 }
 
 iozone_filesystem() {
 	# Son
 	if [ -e '/usr/bin/iozone' ]; then
-		echo "Filesystem benchmark with IOZone"
+		echo "IOZone Test"
 		local TEST_FILE_SIZE=5242880 #file size temporary iozone using to test, recommend x3 size of memmory. Reference https://www.thegeekstuff.com/2011/05/iozone-examples/
 		local TEST_RECORD_SIZE=1024 #1M 
 		local name_output_file="/tmp/$(date +%Y-%m-%d_%H-%M-%S).iozone"
 
 		echo "$(iozone -s $TEST_FILE_SIZE -r $TEST_RECORD_SIZE -i 0 -i 1 -i 2 -b tmp_file)" > "$name_output_file"
 
-        	local initial_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($3)}'`
-        	local rewrite=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($4)}'`
-        	local read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($5)}'`
-        	local re_read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($6)}'`
-        	local rand_read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($7)}'`
-        	local rand_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($8)}'`
+        local initial_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($3)}'`
+        local rewrite=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($4)}'`
+        local read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($5)}'`
+        local re_read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($6)}'`
+        local rand_read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($7)}'`
+        local rand_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($8)}'`
 
 		printf "Write performance			:${GREEN}%-16s${PLAIN}\n" "${initial_write}kB/s"
 		printf "Re-write performance			:${GREEN}%-16s${PLAIN}\n" "${rewrite}kB/s"
@@ -205,10 +214,10 @@ test() {
 	echo "Date                 : $(date +%Y-%m-%d_%H-%M-%S)"
 	echo ""
 
-	echo "CPU Speed"
-	next
-	passmark_cpu && next
-	echo ""
+	# echo "CPU Speed"
+	# next
+	# passmark_cpu && next
+	# echo ""
 
 	echo "Memory Speed"
 	next
@@ -217,18 +226,18 @@ test() {
 	
 	echo "Filesystem Speed"
 	next
-	iozone_filesystem
+	iozone_filesystem && next
 	echo ""
 
 	echo "Disk Speed"
 	next
-	fio_test
+	fio_test && next
 	echo ""
 
-	echo "Network Speedtest"
-	next
-	printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
-	speed && next
+	# echo "Network Speedtest"
+	# next
+	# printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
+	# speed && next
 
 }
 
