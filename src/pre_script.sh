@@ -46,7 +46,7 @@ then
 fi
 
 cp pt_linux_x64 /usr/bin/pt_linux_x64
-rm -rf ./pt_linux_x64
+rm -rf ./pt_linux_x64 pt_linux_x64.zip
 
 ## Install iozone
 if [ ! -e '/opt/iozone/bin/iozone' ];
