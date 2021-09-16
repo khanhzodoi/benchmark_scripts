@@ -10,6 +10,8 @@ PLAIN='\033[0m'
 # check root
 [[ $EUID -ne 0 ]] && echo -e "${RED}Error:${PLAIN} This script must be run as root!" && exit 1
 
+# check directory path
+[[ "z$1" == "z" ]] && echo -e "${RED}Error:${PLAIN} Enter directory path to test disk performance! Ex: ./benchmark_script.sh /example/dir/path." && exit 1
 
 next() {
 	printf "%-70s\n" "-" | sed 's/\s/-/g'
@@ -53,8 +55,8 @@ fio_test() {
 		local tmp_2=$(mktemp)
 		local tmp_3=$(mktemp)
 		local tmp_4=$(mktemp)
-		local test_dir="/tmp/fio_test"
-		mkdir $test_dir > /dev/null 2>&1
+		local test_dir="$(echo $1 | sed 's:/*$::')"
+		mkdir -p $test_dir > /dev/null 2>&1
 
 		sudo fio --name=write_throughput --directory=$test_dir --numjobs=8 --size=4G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --output="$tmp_1"
 		if [ $(fio -v | cut -d '.' -f 1) == "fio-2" ]; then
@@ -185,8 +187,10 @@ iozone_filesystem() {
 		local TEST_FILE_SIZE=5242880 #file size temporary iozone using to test, recommend x3 size of memmory. Reference https://www.thegeekstuff.com/2011/05/iozone-examples/
 		local TEST_RECORD_SIZE=1024 #1M 
 		local name_output_file="/tmp/$(date +%Y-%m-%d_%H-%M-%S).iozone"
+		local test_dir="$(echo $1 | sed 's:/*$::')"
+		mkdir -p $test_dir > /dev/null 2>&1
 
-		echo "$(iozone -s $TEST_FILE_SIZE -r $TEST_RECORD_SIZE -i 0 -i 1 -i 2 -b tmp_file)" > "$name_output_file"
+		echo "$(iozone -s $TEST_FILE_SIZE -r $TEST_RECORD_SIZE -i 0 -i 1 -i 2 -f $test_dir/tmp_file)" > "$name_output_file"
 
         local initial_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($3)}'`
         local rewrite=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($4)}'`
@@ -201,7 +205,7 @@ iozone_filesystem() {
 		printf "Re_read performance			:${GREEN}%-16s${PLAIN}\n" "${re_read}kB/s"
 		printf "Random-write performance		:${GREEN}%-16s${PLAIN}\n" "${rand_write}kB/s"
 		printf "Random-read performance			:${GREEN}%-16s${PLAIN}\n" "${rand_read}kB/s"
-        	rm -f tmp_file
+        rm -rf $test_dir
 		rm -f "/tmp/$name_output_file" #remove log file
 	else
 		echo "IOZone is missing!!! Please install IOZone before running test."
@@ -227,12 +231,12 @@ test() {
 	
 	echo "Filesystem Speed"
 	next
-	iozone_filesystem && next
+	iozone_filesystem $1 && next
 	echo ""
 
 	echo "Disk Speed"
 	next
-	fio_test && next
+	fio_test $1 && next
 	echo ""
 
 	echo "Network Speedtest"
@@ -245,6 +249,6 @@ test() {
 
 clear
 tmp=$(mktemp)
-test | tee $tmp
+test $1 | tee $tmp
 cat $tmp >> ~/benchmark.log
 rm -rf $tmp
