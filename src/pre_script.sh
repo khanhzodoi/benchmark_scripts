@@ -26,6 +26,8 @@ PWD=`pwd`
 wget -q $passmark_link -O pt_linux_x64.zip > /dev/null 2>&1
 unzip -d $PWD pt_linux_x64.zip > /dev/null 2>&1
 
+yum install ncurses-compat-libs -y > /dev/null 2>&1 || sudo apt-get install libncurses5 -y > /dev/null 2>&1
+
 # Make some changes to lib
 if [[ $centos_ver == "7" ]]
 then
