@@ -117,6 +117,7 @@ passmark_cpu() {
 		cd /tmp > /dev/null 2>&1
 		pt_linux_x64 -p 4 -i 3 -d 2 -r 1 > /dev/null 2>&1
 
+		local cpu_mark=`grep "SUMM_CPU:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f", $1)}'`
 		local cpu_integer_math=`grep "CPU_INTEGER_MATH:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
 		local cpu_floatingpoint_math=`grep "CPU_FLOATINGPOINT_MATH:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
 		local cpu_sorting=`grep "CPU_SORTING:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Primes/s", $1)}'`
@@ -126,6 +127,7 @@ passmark_cpu() {
 		local cpu_sse=`grep "CPU_sse:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Matrices/s", $1)}'`
 		local cpu_singlethreaded=`grep "CPU_SINGLETHREAD:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
 
+		echo "CPU Mark                   : $cpu_integer_math"
 		echo "Integer Math               : $cpu_integer_math"
 		echo "Floating Point Math        : $cpu_floatingpoint_math"
 		echo "Prime Numbers              : $cpu_prime"
