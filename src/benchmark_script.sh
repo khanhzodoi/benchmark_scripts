@@ -214,10 +214,10 @@ test() {
 	echo "Date                 : $(date +%Y-%m-%d_%H-%M-%S)"
 	echo ""
 
-	# echo "CPU Speed"
-	# next
-	# passmark_cpu && next
-	# echo ""
+	echo "CPU Speed"
+	next
+	passmark_cpu && next
+	echo ""
 
 	echo "Memory Speed"
 	next
@@ -234,10 +234,10 @@ test() {
 	fio_test && next
 	echo ""
 
-	# echo "Network Speedtest"
-	# next
-	# printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
-	# speed && next
+	echo "Network Speedtest"
+	next
+	printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
+	speed && next
 
 }
 
