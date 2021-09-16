@@ -127,7 +127,7 @@ passmark_cpu() {
 		local cpu_sse=`grep "CPU_sse:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Matrices/s", $1)}'`
 		local cpu_singlethreaded=`grep "CPU_SINGLETHREAD:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
 
-		echo "CPU Mark                   : $cpu_integer_math"
+		echo "CPU Mark                   : $cpu_mark"
 		echo "Integer Math               : $cpu_integer_math"
 		echo "Floating Point Math        : $cpu_floatingpoint_math"
 		echo "Prime Numbers              : $cpu_prime"
