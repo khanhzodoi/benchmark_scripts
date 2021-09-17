@@ -184,8 +184,8 @@ iozone_filesystem() {
 	# Son
 	if [ -e '/usr/bin/iozone' ]; then
 		echo "IOZone Test"
-		local TEST_FILE_SIZE=5242880 #file size temporary iozone using to test, recommend x3 size of memmory. Reference https://www.thegeekstuff.com/2011/05/iozone-examples/
-		local TEST_RECORD_SIZE=1024 #1M 
+		local TEST_FILE_SIZE=524288 #512MB. file size temporary iozone using to test, recommend x3 size of memmory. Reference https://www.thegeekstuff.com/2011/05/iozone-examples/
+		local TEST_RECORD_SIZE=8192 #8M. It depend of DB block size. IOZone using record size ranging from 4K to 16MB
 		local name_output_file="/tmp/$(date +%Y-%m-%d_%H-%M-%S).iozone"
 		local test_dir="$(echo $1 | sed 's:/*$::')"
 		mkdir -p $test_dir > /dev/null 2>&1
@@ -206,7 +206,7 @@ iozone_filesystem() {
 		printf "Random-write performance		:${GREEN}%-16s${PLAIN}\n" "${rand_write}kB/s"
 		printf "Random-read performance			:${GREEN}%-16s${PLAIN}\n" "${rand_read}kB/s"
         rm -rf $test_dir
-		rm -f "/tmp/$name_output_file" #remove log file
+		rm -f $name_output_file #remove log file
 	else
 		echo "IOZone is missing!!! Please install IOZone before running test."
 	fi
