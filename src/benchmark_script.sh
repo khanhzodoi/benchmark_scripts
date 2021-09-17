@@ -205,7 +205,7 @@ iozone_filesystem() {
 		printf "Re_read performance			:${GREEN}%-16s${PLAIN}\n" "${re_read}kB/s"
 		printf "Random-write performance		:${GREEN}%-16s${PLAIN}\n" "${rand_write}kB/s"
 		printf "Random-read performance			:${GREEN}%-16s${PLAIN}\n" "${rand_read}kB/s"
-        rm -rf $test_dir
+        rm -rf "$test_dir/tmp_file"
 		rm -f $name_output_file #remove log file
 	else
 		echo "IOZone is missing!!! Please install IOZone before running test."
