@@ -22,9 +22,9 @@ then
 fi
 
 ## Install passmark
-PWD=`pwd`
+CPWD=`pwd`
 wget -q $passmark_link -O pt_linux_x64.zip > /dev/null 2>&1
-unzip -d $PWD pt_linux_x64.zip > /dev/null 2>&1
+unzip -d $CPWD pt_linux_x64.zip > /dev/null 2>&1
 
 yum install ncurses-compat-libs -y > /dev/null 2>&1 || sudo apt-get install libncurses5 -y > /dev/null 2>&1
 
@@ -39,12 +39,12 @@ then
     unlink /lib64/libstdc++.so.6
     ln -s  /lib64/libstdc++.so.6.0.20 /lib64/libstdc++.so.6
 
-    cd $PWD > /dev/null 2>&1
+    cd /root > /dev/null 2>&1
     echo "Created $passmark_dir folder to download lib for running passmark" >> $log_file_name
     echo "Backup old soft link of /lib64/libstdc++.so.6 at $passmark_dir/vagranlib.bk file." >> $log_file_name
     echo "===========================" >> $log_file_name
 fi
-cd $PWD > /dev/null 2>&1
+cd $CPWD > /dev/null 2>&1
 cp pt_linux_x64 /usr/bin/pt_linux_x64
 rm -rf ./pt_linux_x64 pt_linux_x64.zip
 
