@@ -4,7 +4,7 @@ passmark_link=https://www.passmark.com/downloads/pt_linux_x64.zip
 iozone_link=http://www.iozone.org/src/current/iozone-3-491.x86_64.rpm
 passmark_dir="/passmark_lib"
 log_file_name="prescript.log"
-centos_ver="`cat /etc/redhat-release > /dev/null 2>&1 | cut -d " " -f 4 | awk -F[.] '{print $1}'`"
+centos_ver="`cat /etc/redhat-release | cut -d " " -f 4 | awk -F[.] '{print $1}'`"
 
 # Colors
 RED='\033[0;31m'
