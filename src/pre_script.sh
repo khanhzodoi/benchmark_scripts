@@ -44,7 +44,7 @@ then
     echo "Backup old soft link of /lib64/libstdc++.so.6 at $passmark_dir/vagranlib.bk file." >> $log_file_name
     echo "===========================" >> $log_file_name
 fi
-
+cd $PWD > /dev/null 2>&1
 cp pt_linux_x64 /usr/bin/pt_linux_x64
 rm -rf ./pt_linux_x64 pt_linux_x64.zip
 
