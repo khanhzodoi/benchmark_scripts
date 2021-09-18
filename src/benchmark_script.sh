@@ -117,7 +117,7 @@ passmark_cpu() {
 		local result_filename="results_cpu.yml"
 
 		cd /tmp > /dev/null 2>&1
-		pt_linux_x64 -p 4 -i 3 -d 2 -r 1 > /dev/null 2>&1
+		pt_linux_x64 -p 2 -i 2 -d 2 -r 1 > /dev/null 2>&1
 
 		local cpu_mark=`grep "SUMM_CPU:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f", $1)}'`
 		local cpu_integer_math=`grep "CPU_INTEGER_MATH:" "$result_filename"| cut -d ":" -f 2 | awk '{printf("%.0f Million Operations/s", $1)}'`
