@@ -215,8 +215,10 @@ iozone_filesystem() {
 
 test() {
 	date=$( date )
+	echo "Start Benchmark: $(date +%Y-%m-%d_%H-%M-%S)"
+	echo ""
 
-	echo "Date                 : $(date +%Y-%m-%d_%H-%M-%S)"
+	echo "OS: $(rpm -q centos-release)"
 	echo ""
 
 	echo "CPU Speed"
@@ -243,6 +245,10 @@ test() {
 	next
 	printf "%-40s%-16s%-14s\n" "Node Name" "IPv4 address" "Download Speed"
 	speed && next
+
+	date=$( date )
+	echo "Finished Benchmark: $(date +%Y-%m-%d_%H-%M-%S)"
+	echo ""
 
 }
 

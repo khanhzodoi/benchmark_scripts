@@ -56,5 +56,5 @@ then
     rm -rf iozone-3-491.x86_64.rpm
 
 fi
-
+timedatectl set-timezone Asia/Bangkok
 echo "Install Done."
