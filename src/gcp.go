@@ -72,6 +72,7 @@ func InitComputeService() (*compute.Service, error) {
 // An error indicates an instance that was never created.
 // A non-nil error indicates an instance is present whether in the RUNNING or TERMINATED state.
 func GetInstance(computeService *compute.Service) (*compute.Instance, error) {
+	log.Print("Get instance function in line 75 start")
 	return computeService.Instances.Get(ProjectID, Zone, InstanceName).Do()
 }
 
@@ -93,12 +94,13 @@ func DeleleInstance(computeService *compute.Service) (*compute.Operation, error)
 func CreateInstance(computeService *compute.Service) (*compute.Operation, error) {
 	// startupMetadata := "#!/bin/bash\n\necho \"I am STARTING some work at $(date)\" >> /home/root/work.txt\necho \"test\" >> $HOME/test.txt"
 	// shutdownMetadata := "#!/bin/bash\n\necho \"I am FINISHING some work at $(date)\" >> /home/root/work.txt\necho \"test\" >> $HOME/test.txt"
-	startupMetadata := "#! /bin/bash\n\necho \"I am STARTING some work at $(date)\" | sudo tee -a $HOME/work.txt"
-	shutdownMetadata := "#! /bin/bash\n\necho \"I am FINISHING some work at $(date)\" | sudo tee -a $(HOME)/work.txt"
+	startupMetadata := "#! /bin/bash\nyum -y install git\ngit clone https://github.com/khanhzodoi/benchmark_scripts.git\n./benchmark_scripts/src/gcp.sh"
+	// shutdownMetadata := "#! /bin/bash\necho \"I am FINISH some work at $(date)\" >> $HOME/work.txt"
 
 	instance := &compute.Instance{
 		Name:        InstanceName,
-		MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-standard-1", Zone),
+		// MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-standard-1", Zone),
+		MachineType: fmt.Sprintf("zones/%s/machineTypes/e2-standard-2", Zone),
 		// zones/ZONE/machineTypes/n2-custom-2-20480-ext
 		// machineType: "zones/us-central1-f/machineTypes/custom-2-15360-ext"
 		NetworkInterfaces: []*compute.NetworkInterface{
@@ -120,14 +122,15 @@ func CreateInstance(computeService *compute.Service) (*compute.Operation, error)
 		Disks: []*compute.AttachedDisk{
 			{
 				Boot:       true,         // The first disk must be a boot disk.
-				AutoDelete: false,        //Optional
+				AutoDelete: true,        //Optional
 				Mode:       "READ_WRITE", //Mode should be READ_WRITE or READ_ONLY
 				Interface:  "SCSI",       //SCSI or NVME - NVME only for SSDs
 				InitializeParams: &compute.AttachedDiskInitializeParams{
 					DiskName:    "worker-instance-boot-disk",
-					SourceImage: "projects/debian-cloud/global/images/family/debian-9",
-					// SourceImage: "projects/debian-cloud/global/images/family/centos-7",
-					// type: fmt.Sprintf("projects/%s/zones/%s/diskTypes/pd-ssd", ProjectID, Zone),
+					// SourceImage: "projects/debian-cloud/global/images/family/debian-9",
+					SourceImage: "projects/centos-cloud/global/images/family/centos-7",
+					DiskType: fmt.Sprintf("projects/%s/zones/%s/diskTypes/pd-ssd",ProjectID,Zone),
+					DiskSizeGb: 200,
 				},
 			},
 		},
@@ -137,10 +140,10 @@ func CreateInstance(computeService *compute.Service) (*compute.Operation, error)
 					Key:   "startup-script",
 					Value: &startupMetadata,
 				},
-				{
-					Key:   "shutdown-script",
-					Value: &shutdownMetadata,
-				},
+				// {
+				// 	Key:   "shutdown-script",
+				// 	Value: &shutdownMetadata,
+				// },
 			},
 		},
 	}
@@ -157,6 +160,7 @@ func startInstance(cs *compute.Service, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	data, _ := operation.MarshalJSON()
 	w.Write(data)
+	
 }
 
 // startInstance is a wrapper function for the switch statement
@@ -169,6 +173,7 @@ func stopInstance(cs *compute.Service, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	data, _ := operation.MarshalJSON()
 	w.Write(data)
+
 }
 
 // https://cloud.google.com/compute/docs/disks#disk-types
