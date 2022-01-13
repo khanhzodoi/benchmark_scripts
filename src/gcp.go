@@ -40,7 +40,9 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("creating instance " + InstanceName + "in zone: " + Zone))
+			startInstance(cs, w)
 		}
+
 	}else {
 		switch instance.Status {
 		case "RUNNING":
@@ -50,9 +52,9 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 		case "STAGING":
 			stopInstance(cs, w)
 		case "STOPPED":
-			startInstance(cs, w)
+			stopInstance(cs, w)
 		case "TERMINATED":
-			startInstance(cs, w)
+			stopInstance(cs, w)
 		default:
 			msg := "instance is in intermediate state: " + instance.Status
 			w.WriteHeader(http.StatusAccepted)
@@ -91,16 +93,14 @@ func DeleleInstance(computeService *compute.Service) (*compute.Operation, error)
 
 // CreateInstance creates a given instance with metadata that logs its information.
 func CreateInstance(computeService *compute.Service) (*compute.Operation, error) {
-	// startupMetadata := "#!/bin/bash\n\necho \"I am STARTING some work at $(date)\" >> /home/root/work.txt\necho \"test\" >> $HOME/test.txt"
 	// shutdownMetadata := "#!/bin/bash\n\necho \"I am FINISHING some work at $(date)\" >> /home/root/work.txt\necho \"test\" >> $HOME/test.txt"
-	startupMetadata := "#! /bin/bash\n\necho \"I am STARTING some work at $(date)\" | sudo tee -a $HOME/work.txt"
-	shutdownMetadata := "#! /bin/bash\n\necho \"I am FINISHING some work at $(date)\" | sudo tee -a $(HOME)/work.txt"
+	startupMetadata := "#! /bin/bash\ntouch /root/startup.txt\necho $(date) >> /root/startup.txt\nyum -y install git\ngit clone https://github.com/hecma002/benchmark.git /root/benchmark\nchmod +x /root/benchmark/src/*.sh\n./root/benchmark/src/setup.sh\necho \"finish at $(date)\" >> /root/startup.txt"
 
 	instance := &compute.Instance{
 		Name:        InstanceName,
-		MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-standard-1", Zone),
-		// zones/ZONE/machineTypes/n2-custom-2-20480-ext
-		// machineType: "zones/us-central1-f/machineTypes/custom-2-15360-ext"
+		// MachineType: fmt.Sprintf("zones/%s/machineTypes/e2-standard-2", Zone),
+		MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-custom-8-32768", Zone),
+		// MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-custom-8-32768-ext", Zone),
 		NetworkInterfaces: []*compute.NetworkInterface{
 			{
 				Name:       "default",
@@ -120,14 +120,15 @@ func CreateInstance(computeService *compute.Service) (*compute.Operation, error)
 		Disks: []*compute.AttachedDisk{
 			{
 				Boot:       true,         // The first disk must be a boot disk.
-				AutoDelete: false,        //Optional
+				AutoDelete: true,        //Optional
 				Mode:       "READ_WRITE", //Mode should be READ_WRITE or READ_ONLY
 				Interface:  "SCSI",       //SCSI or NVME - NVME only for SSDs
 				InitializeParams: &compute.AttachedDiskInitializeParams{
 					DiskName:    "worker-instance-boot-disk",
-					SourceImage: "projects/debian-cloud/global/images/family/debian-9",
-					// SourceImage: "projects/debian-cloud/global/images/family/centos-7",
-					// type: fmt.Sprintf("projects/%s/zones/%s/diskTypes/pd-ssd", ProjectID, Zone),
+					// SourceImage: "projects/debian-cloud/global/images/family/debian-9",
+					SourceImage: "projects/centos-cloud/global/images/family/centos-7",
+					DiskType: fmt.Sprintf("projects/%s/zones/%s/diskTypes/pd-ssd",ProjectID,Zone),
+					DiskSizeGb: 200,
 				},
 			},
 		},
@@ -137,10 +138,10 @@ func CreateInstance(computeService *compute.Service) (*compute.Operation, error)
 					Key:   "startup-script",
 					Value: &startupMetadata,
 				},
-				{
-					Key:   "shutdown-script",
-					Value: &shutdownMetadata,
-				},
+				// {
+				// 	Key:   "shutdown-script",
+				// 	Value: &shutdownMetadata,
+				// },
 			},
 		},
 	}
@@ -157,6 +158,7 @@ func startInstance(cs *compute.Service, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	data, _ := operation.MarshalJSON()
 	w.Write(data)
+	
 }
 
 // startInstance is a wrapper function for the switch statement
@@ -169,6 +171,7 @@ func stopInstance(cs *compute.Service, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	data, _ := operation.MarshalJSON()
 	w.Write(data)
+
 }
 
 // https://cloud.google.com/compute/docs/disks#disk-types
