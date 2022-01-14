@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
 	"google.golang.org/api/compute/v1"
 )
 
@@ -15,8 +14,6 @@ var Zone = ""
 var Region = ""
 var InstanceName = ""
 
-// DeployInstance will use the Golang GCP API to deploy a GCE instance with given startup-script that creates a text file
-// and logs the time. If the instance is there. It will shut it down, and the shutdown script will be invoked.
 func DeployInstance(w http.ResponseWriter, r *http.Request) {
 	ProjectID = os.Getenv("PROJECT_ID")
 	Zone = os.Getenv("ZONE")
@@ -29,8 +26,6 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	//Try retrieve the instance. On error we shall HAPHAZARDLY assume it doesnt exist and try create it.
-	// There could be other reasons.
 	instance, err := GetInstance(cs)
 	if err != nil {
 		w.WriteHeader(http.StatusTemporaryRedirect)
@@ -53,26 +48,19 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// InitComputeService obtains the compute service that allows us to use the compute API
 func InitComputeService() (*compute.Service, error) {
 	ctx := context.Background()
 	return compute.NewService(ctx)
 }
 
-// GetInstance passes in the instance name supplied and retrieves it.
-// An error indicates an instance that was never created.
-// A non-nil error indicates an instance is present whether in the RUNNING or TERMINATED state.
 func GetInstance(computeService *compute.Service) (*compute.Instance, error) {
 	return computeService.Instances.Get(ProjectID, Zone, InstanceName).Do()
 }
 
-// StopInstance will delete an instance with the name specified in the InstanceName variable.
 
-// StartInstance begins an instance with the given name
 func StartInstance(computeService *compute.Service) (*compute.Operation, error) {
 	return computeService.Instances.Start(ProjectID, Zone, InstanceName).Do()
 }
-
 
 // CreateInstance creates a given instance with metadata that logs its information.
 func CreateInstance(computeService *compute.Service) (*compute.Operation, error) {
