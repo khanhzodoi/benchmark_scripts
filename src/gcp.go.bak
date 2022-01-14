@@ -40,7 +40,9 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("creating instance " + InstanceName + "in zone: " + Zone))
+			startInstance(cs, w)
 		}
+
 	}else {
 		switch instance.Status {
 		case "RUNNING":
@@ -50,9 +52,9 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 		case "STAGING":
 			stopInstance(cs, w)
 		case "STOPPED":
-			startInstance(cs, w)
+			stopInstance(cs, w)
 		case "TERMINATED":
-			startInstance(cs, w)
+			stopInstance(cs, w)
 		default:
 			msg := "instance is in intermediate state: " + instance.Status
 			w.WriteHeader(http.StatusAccepted)
@@ -72,7 +74,6 @@ func InitComputeService() (*compute.Service, error) {
 // An error indicates an instance that was never created.
 // A non-nil error indicates an instance is present whether in the RUNNING or TERMINATED state.
 func GetInstance(computeService *compute.Service) (*compute.Instance, error) {
-	log.Print("Get instance function in line 75 start")
 	return computeService.Instances.Get(ProjectID, Zone, InstanceName).Do()
 }
 
@@ -92,17 +93,14 @@ func DeleleInstance(computeService *compute.Service) (*compute.Operation, error)
 
 // CreateInstance creates a given instance with metadata that logs its information.
 func CreateInstance(computeService *compute.Service) (*compute.Operation, error) {
-	// startupMetadata := "#!/bin/bash\n\necho \"I am STARTING some work at $(date)\" >> /home/root/work.txt\necho \"test\" >> $HOME/test.txt"
 	// shutdownMetadata := "#!/bin/bash\n\necho \"I am FINISHING some work at $(date)\" >> /home/root/work.txt\necho \"test\" >> $HOME/test.txt"
-	startupMetadata := "#! /bin/bash\nyum -y install git\ngit clone https://github.com/khanhzodoi/benchmark_scripts.git\n./benchmark_scripts/src/gcp.sh"
-	// shutdownMetadata := "#! /bin/bash\necho \"I am FINISH some work at $(date)\" >> $HOME/work.txt"
+	startupMetadata := "#! /bin/bash\ntouch /root/startup.txt\necho $(date) >> /root/startup.txt\nyum -y install git\ngit clone https://github.com/hecma002/benchmark.git /root/benchmark\nchmod +x /root/benchmark/src/*.sh\n./root/benchmark/src/setup.sh\necho \"finish at $(date)\" >> /root/startup.txt"
 
 	instance := &compute.Instance{
 		Name:        InstanceName,
-		// MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-standard-1", Zone),
-		MachineType: fmt.Sprintf("zones/%s/machineTypes/e2-standard-2", Zone),
-		// zones/ZONE/machineTypes/n2-custom-2-20480-ext
-		// machineType: "zones/us-central1-f/machineTypes/custom-2-15360-ext"
+		// MachineType: fmt.Sprintf("zones/%s/machineTypes/e2-standard-2", Zone),
+		MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-custom-8-32768", Zone),
+		// MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-custom-8-32768-ext", Zone),
 		NetworkInterfaces: []*compute.NetworkInterface{
 			{
 				Name:       "default",
