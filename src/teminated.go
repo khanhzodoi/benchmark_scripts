@@ -37,7 +37,7 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 
 	} else 
 	{
-		if instance.Status == "RUNNING" {
+		if instance.Status == "STOPPED" {
 			operation, err := cs.Instances.Delete(ProjectID, Zone, InstanceName).Context(ctx).Do()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -47,41 +47,9 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 			data, _ := operation.MarshalJSON()
 			w.Write(data)
 		}
-		// switch instance.Status {
-		// case "RUNNING":
-		// 	stopInstance(cs, w)
-		// case "PROVISIONING":
-		// 	stopInstance(cs, w)
-		// case "STAGING":
-		// 	stopInstance(cs, w)
-		// case "STOPPED":
-		
-		// case "TERMINATED":
-		// 	stopInstance(cs, w)
-		// default:
-		// 	msg := "instance is in intermediate state: " + instance.Status
-		// 	w.WriteHeader(http.StatusAccepted)
-		// 	w.Write([]byte(msg))
-		// 	log.Println(msg)
-		// }
+
 	}
 }
-
-// func StopInstance(computeService *compute.Service) (*compute.Operation, error) {
-// 	return computeService.Instances.Stop(ProjectID, Zone, InstanceName).Do()
-// }
-
-// func stopInstance(cs *compute.Service, w http.ResponseWriter) {
-// 	operation, err := StopInstance(cs)
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		log.Fatal(err)
-// 	}
-// 	w.WriteHeader(http.StatusOK)
-// 	data, _ := operation.MarshalJSON()
-// 	w.Write(data)
-
-// }
 
 // https://cloud.google.com/compute/docs/disks#disk-types
 // https://cloud.google.com/compute/docs/disks/extreme-persistent-disk
