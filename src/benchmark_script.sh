@@ -21,14 +21,14 @@ speed_test() {
 	local speedtest=$(wget -4O /dev/null -T300 $1 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}')
 	local ipaddress=$(ping -c1 -4 -n `awk -F'/' '{print $3}' <<< $1` | awk -F '[()]' '{print $2;exit}')
 	local nodeName=$2
-	printf "${YELLOW}%-40s${GREEN}%-16s${RED}%-14s${PLAIN}\n" "${nodeName}" "${ipaddress}" "${speedtest}"
+	printf "%-40s%-16s%-14s\n" "${nodeName}" "${ipaddress}" "${speedtest}"
 }
 
 speed_test_v6() {
 	local speedtest=$(wget -6O /dev/null -T300 $1 2>&1 | awk '/\/dev\/null/ {speed=$3 $4} END {gsub(/\(|\)/,"",speed); print speed}')
 	local ipaddress=$(ping6 -c1 -n `awk -F'/' '{print $3}' <<< $1` | awk -F '[()]' '{print $2;exit}')
 	local nodeName=$2
-	printf "${YELLOW}%-40s${GREEN}%-16s${RED}%-14s${PLAIN}\n" "${nodeName}" "${ipaddress}" "${speedtest}"
+	printf "%-40s%-16s%-14s\n" "${nodeName}" "${ipaddress}" "${speedtest}"
 }
 
 speed() {
@@ -98,10 +98,10 @@ fio_test() {
 		fi
 		rm -rf $test_dir/*
 
-		echo -e "Random read performance      : ${RED}IOPS =${PLAIN} $rand_iops_read, BW = $rand_bw_read"
-		echo -e "Random write performance     : ${RED}IOPS =${PLAIN} $rand_iops_write, BW = $rand_bw_write"
-		echo -e "Sequential read perfomance   : IOPS = $seq_iops_read, ${RED}BW =${PLAIN} $seq_bw_read"
-		echo -e "Sequential write performance : IOPS = $seq_iops_write, ${RED}BW =${PLAIN} $seq_bw_write"
+		echo -e "Random read performance      : IOPS = $rand_iops_read, BW = $rand_bw_read"
+		echo -e "Random write performance     : IOPS = $rand_iops_write, BW = $rand_bw_write"
+		echo -e "Sequential read perfomance   : IOPS = $seq_iops_read, BW = $seq_bw_read"
+		echo -e "Sequential write performance : IOPS = $seq_iops_write, BW = $seq_bw_write"
 
 		# Cleanup temp files
 		rm -rf $tmp_1 $tmp_2 $tmp_3 $tmp_4 $test_dir
@@ -199,12 +199,12 @@ iozone_filesystem() {
         local rand_read=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($7)}'`
         local rand_write=`grep $TEST_FILE_SIZE "$name_output_file" | grep $TEST_RECORD_SIZE | grep -v "iozone" | awk '{printf($8)}'`
 
-		printf "Write performance			:${GREEN}%-16s${PLAIN}\n" "${initial_write}kB/s"
-		printf "Re-write performance			:${GREEN}%-16s${PLAIN}\n" "${rewrite}kB/s"
-		printf "Read performance			:${GREEN}%-16s${PLAIN}\n" "${read}kB/s"
-		printf "Re_read performance			:${GREEN}%-16s${PLAIN}\n" "${re_read}kB/s"
-		printf "Random-write performance		:${GREEN}%-16s${PLAIN}\n" "${rand_write}kB/s"
-		printf "Random-read performance			:${GREEN}%-16s${PLAIN}\n" "${rand_read}kB/s"
+		printf "Write performance			:%-16s\n" "${initial_write}kB/s"
+		printf "Re-write performance			:%-16s\n" "${rewrite}kB/s"
+		printf "Read performance			:%-16s\n" "${read}kB/s"
+		printf "Re_read performance			:%-16s\n" "${re_read}kB/s"
+		printf "Random-write performance		:%-16s\n" "${rand_write}kB/s"
+		printf "Random-read performance			:%-16s\n" "${rand_read}kB/s"
         rm -rf "$test_dir/tmp_file"
 		rm -f $name_output_file #remove log file
 	else

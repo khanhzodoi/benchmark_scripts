@@ -13,7 +13,7 @@ YELLOW='\033[0;33m'
 PLAIN='\033[0m'
 
 # check root
-[[ $EUID -ne 0 ]] && echo -e "${RED}Error:${PLAIN} This script must be run as root!" && exit 1
+[[ $EUID -ne 0 ]] && echo -e "Error: This script must be run as root!" && exit 1
 
 ## Install wget, unzip, fio
 if [ ! -e '/usr/bin/wget' ] || [ ! -e '/usr/bin/fio' ] || [ ! -e '/usr/bin/unzip' ] || [ ! -e '/usr/bin/git' ]
