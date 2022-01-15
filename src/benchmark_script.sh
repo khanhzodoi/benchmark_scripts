@@ -55,7 +55,7 @@ fio_test() {
 		local tmp_2=$(mktemp)
 		local tmp_3=$(mktemp)
 		local tmp_4=$(mktemp)
-		local test_dir="$(echo $1 | sed 's:/*$::')"
+		local test_dir="$(echo $1 | sed 's:/*$::')/test_disk"
 		mkdir -p $test_dir > /dev/null 2>&1
 
 		sudo fio --name=write_throughput --directory=$test_dir --numjobs=8 --size=4G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --output="$tmp_1"
