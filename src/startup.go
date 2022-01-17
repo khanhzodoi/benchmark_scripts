@@ -18,34 +18,66 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 	ProjectID = os.Getenv("PROJECT_ID")
 	Zone = os.Getenv("ZONE")
 	Region = os.Getenv("REGION")
-	InstanceName = os.Getenv("INSTANCE_NAME")
 
-	cs, err := InitComputeService()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
-	}
-
-	instance, err := GetInstance(cs)
-	if err != nil {
-		w.WriteHeader(http.StatusTemporaryRedirect)
-		w.Write([]byte(err.Error() + " instance may not exist yet"))
-		log.Print(err)
-
-		_, err = CreateInstance(cs)
+	listInstance := [...]string{"e2-standard-2", "e2-standard-8", "n2-standard-2", "n2-standard-8", "n1-custom-2-8192", "n1-custom-8-32768", "c2-standard-8" }
+	index := 0
+	for ok := true; ok; ok = ( index <  len(listInstance)) {
+		InstanceName := listInstance[index]
+		cs, err := InitComputeService()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("creating instance " + InstanceName + "in zone: " + Zone))
-			startInstance(cs, w)
+			log.Fatal(err)
 		}
-
-	} else {
-		msg := "instance is in intermediate state: " + instance.Status
-		w.WriteHeader(http.StatusAccepted)
-		w.Write([]byte(msg))
-		log.Println(msg)
-		
+	
+		instance, err := GetInstance(cs)
+		if err != nil {
+			w.WriteHeader(http.StatusTemporaryRedirect)
+			w.Write([]byte(err.Error() + " instance may not exist yet"))
+			log.Print(err)
+	
+			_, err = CreateInstance(cs)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("creating instance " + InstanceName + "in zone: " + Zone))
+				startInstance(cs, w)
+			}
+	
+		} else {
+			msg := "instance is in intermediate state: " + instance.Status
+			w.WriteHeader(http.StatusAccepted)
+			w.Write([]byte(msg))
+			log.Println(msg)
+			
+		}
+		index+= 1
 	}
+	
+	// cs, err := InitComputeService()
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	log.Fatal(err)
+	// }
+
+	// instance, err := GetInstance(cs)
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusTemporaryRedirect)
+	// 	w.Write([]byte(err.Error() + " instance may not exist yet"))
+	// 	log.Print(err)
+
+	// 	_, err = CreateInstance(cs)
+	// 	if err != nil {
+	// 		w.WriteHeader(http.StatusInternalServerError)
+	// 		w.Write([]byte("creating instance " + InstanceName + "in zone: " + Zone))
+	// 		startInstance(cs, w)
+	// 	}
+
+	// } else {
+	// 	msg := "instance is in intermediate state: " + instance.Status
+	// 	w.WriteHeader(http.StatusAccepted)
+	// 	w.Write([]byte(msg))
+	// 	log.Println(msg)
+		
+	// }
 }
 
 func InitComputeService() (*compute.Service, error) {
@@ -68,9 +100,9 @@ func CreateInstance(computeService *compute.Service) (*compute.Operation, error)
 	startupMetadata := "#! /bin/bash\nyum -y install git\ngit clone https://github.com/khanhzodoi/benchmark_scripts.git /root/benchmark\nchmod +x /root/benchmark/src/*.sh\n./root/benchmark/src/gcp-startup-script.sh"
 
 	instance := &compute.Instance{
-		Name: InstanceName,
+		Name: "benchmark" + InstanceName,
 		// MachineType: fmt.Sprintf("zones/%s/machineTypes/e2-standard-2", Zone),
-		MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-custom-8-32768", Zone),
+		MachineType: fmt.Sprintf("zones/%s/machineTypes/%s", Zone, InstanceName),
 		// MachineType: fmt.Sprintf("zones/%s/machineTypes/n1-custom-8-32768-ext", Zone),
 		NetworkInterfaces: []*compute.NetworkInterface{
 			{
