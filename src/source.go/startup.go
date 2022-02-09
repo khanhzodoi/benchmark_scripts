@@ -139,5 +139,3 @@ func startInstance(cs *compute.Service, w http.ResponseWriter) {
 // https://cloud.google.com/compute/docs/reference/rest/v1/instances/attachDisk
 // https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type#api_2
 // https://cloud.google.com/compute/docs/images/os-details#general-info
-// https://cloud.google.com/compute/docs/metadata/querying-metadata
-// https://cloud.google.com/compute/docs/metadata/default-metadata-values
