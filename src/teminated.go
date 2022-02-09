@@ -14,36 +14,31 @@ var Zone = ""
 var Region = ""
 var InstanceName = ""
 
-func DeployInstance(w http.ResponseWriter, r *http.Request) {
+func DeleteInstance(w http.ResponseWriter, r *http.Request) {
 	ProjectID = os.Getenv("PROJECT_ID")
 	Zone = os.Getenv("ZONE")
 	Region = os.Getenv("REGION")
-	InstanceName = os.Getenv("INSTANCE_NAME")
-
-	listInstance := [...]string{"e2-standard-2", "e2-standard-8", "n2-standard-2", "n2-standard-8", "n1-custom-2-8192", "n1-custom-8-32768", "c2-standard-8" }
-	
-	index := 0
-	for ok := true; ok; ok = ( index <  len(listInstance)) {
-		InstanceName := listInstance[index]
-		ctx := context.Background()
-		cs, err := compute.NewService(ctx)
+	var listInstance = []string{"e2-standard-8","e2-standard-2",  "n2-standard-2", "n2-standard-8", "n1-custom-2-8192", "n1-custom-8-32768", "c2-standard-8"}
+	for i:=0;i<len(listInstance);i++ {
+		cs, err := compute.NewService(context.Background())
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Fatal(err)
 		}
-		instance, err := cs.Instances.Get(ProjectID, Zone, InstanceName).Do()
+		InstanceName = "benchmark-"+listInstance[i]
+
+		instance, err := GetInstance(cs)
 		if err != nil {
-			w.WriteHeader(http.StatusTemporaryRedirect)
-			w.Write([]byte(err.Error() + " instance may not exist yet"))
-			log.Print(err)
-	
+		w.WriteHeader(http.StatusTemporaryRedirect)
+		w.Write([]byte(err.Error() + " instance may not exist yet"))
+		log.Print(err)
 		} else 
 		{
 			for ok := true; ok; ok = ( instance.Status !=  "TERMINATED") {
-				time.Sleep(60 * time.Second)
+				time.Sleep(1 * time.Second)
 			}
-	
-			operation, err := cs.Instances.Delete(ProjectID, Zone, InstanceName).Context(ctx).Do()
+
+			operation, err := cs.Instances.Delete(ProjectID, Zone, InstanceName).Context(context.Background()).Do()
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				log.Fatal(err)
@@ -51,16 +46,17 @@ func DeployInstance(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 			data, _ := operation.MarshalJSON()
 			w.Write(data)
-		
-			w.Write([]byte(" INSTANCE STATUS AFTER delete: " + instance.Status))
-			log.Print(instance.Status)
-	
+			msg:= InstanceName + " is " +instance.Status
+			log.Print(msg)
+
 		}
-		index := index +1
+
 	}
 	
 }
-
+func GetInstance(computeService *compute.Service) (*compute.Instance, error) {
+	return computeService.Instances.Get(ProjectID, Zone, InstanceName).Do()
+}
 // https://cloud.google.com/compute/docs/disks#disk-types
 // https://cloud.google.com/compute/docs/disks/extreme-persistent-disk
 // https://cloud.google.com/compute/docs/reference/rest/v1/instances/attachDisk
