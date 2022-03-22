@@ -1,0 +1,342 @@
+
+{
+    "AWS": [
+        {
+            "name": "c4.large",
+            "metadata": { "vCPU": 3 , "RAM": 4, "Disk": "40 GB" },
+            "cpu_benchmark":{ 
+                "CPU Mark": 2773,
+                "Integer Math": 7568,         
+                "Floating Point Math": 5094 ,  
+                "Prime Numbers": 23468284,
+                "Sorting": 5290807,
+                "Encryption": 754680255,    
+                "Compression": 39192372,     
+                "CPU Single Threaded": 1874, 
+                "Extended Instructions(SSE)": 1874
+            },
+            "ram_benchmark": { 
+                "Database Operation": 1211.2965990655634,
+                "Memory Read Cached": 22889.8388671875,         
+                "Memory Read Uncached": 8376.61083984375,  
+                "Memory Write": 7856.632080078125,
+                "Available RAM": 12904,
+                "Memory Latency": 58.454823220609541,    
+                "Memory Threaded": 39508.554565429688
+            }, 
+            "filesystem_benchmark" : { 
+                "Write performance": 2760269,
+                "Re-write performance": 3652942,         
+                "Read performance": 6977198 ,  
+                "Re_read performance": 7116031,
+                "Random-write performance": 3971214,
+                "Random-read performance": 7054848
+            },
+
+            "disk_benchmark" : { 
+                "Random read performance": 3058,
+                "Random write performance": 2687,         
+                "Sequential read perfomance": 131,  
+                "Sequential write performance": 130
+            },
+
+            "network_benchmark" : { 
+                "CacheFly - 204.93.150.152": 282,
+                "Vultr, Los Angeles, CA - 108.61.219.200": 6.75,
+                "Vultr, Seattle, WA - 108.61.194.105" : 8.76,
+                "Linode, Tokyo, JP - 139.162.65.37"  : 20.7,
+                "Linode, Singapore, SG - 139.162.23.4"   : 246,
+                "Softlayer, HongKong, CN - 119.81.130.170" : 33.8,
+                "VNPT, Ha Noi, VN - 113.164.24.102": 15.5,
+                "VNPT, Da Nang, VN - 113.164.16.66": 11.1,
+                "VNPT, Ho Chi Minh, VN - 113.164.8.250": 16.5,
+                "Viettel Network, Ha Noi, VN - 27.68.226.129": 35.6,
+                "Viettel Network, Da Nang, VN - 27.68.201.1": 34.4,
+                "Viettel Network, Ho Chi Minh, VN - 27.68.239.33": 62.3,
+                "FPT Telecom, Ho Chi Minh, VN - 118.70.71.215": 22.6
+            }
+
+
+        },
+        {
+            "name": "c4.xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" },
+            "cpu_benchmark":{ 
+                "CPU Mark": 2773,
+                "Integer Math": 7568,         
+                "Floating Point Math": 5094 ,  
+                "Prime Numbers": 23468284,
+                "Sorting": 5290807,
+                "Encryption": 754680255,    
+                "Compression": 39192372,     
+                "CPU Single Threaded": 1874, 
+                "Extended Instructions(SSE)": 1874
+            },
+            "ram_benchmark": { 
+                "Database Operation": 1211.2965990655634,
+                "Memory Read Cached": 22889.8388671875,         
+                "Memory Read Uncached": 8376.61083984375,  
+                "Memory Write": 7856.632080078125,
+                "Available RAM": 12904,
+                "Memory Latency": 58.454823220609541,    
+                "Memory Threaded": 39508.554565429688
+            }, 
+            "filesystem_benchmark" : { 
+                "Write performance": 2760269,
+                "Re-write performance": 3652942,         
+                "Read performance": 6977198 ,  
+                "Re_read performance": 7116031,
+                "Random-write performance": 3971214,
+                "Random-read performance": 7054848
+            },
+
+            "disk_benchmark" : { 
+                "Random read performance": 3058,
+                "Random write performance": 2687,         
+                "Sequential read perfomance": 131,  
+                "Sequential write performance": 130
+            },
+
+            "network_benchmark" : { 
+                "CacheFly - 204.93.150.152": 282,
+                "Vultr, Los Angeles, CA - 108.61.219.200": 6.75,
+                "Vultr, Seattle, WA - 108.61.194.105" : 8.76,
+                "Linode, Tokyo, JP - 139.162.65.37"  : 20.7,
+                "Linode, Singapore, SG - 139.162.23.4"   : 246,
+                "Softlayer, HongKong, CN - 119.81.130.170" : 33.8,
+                "VNPT, Ha Noi, VN - 113.164.24.102": 15.5,
+                "VNPT, Da Nang, VN - 113.164.16.66": 11.1,
+                "VNPT, Ho Chi Minh, VN - 113.164.8.250": 16.5,
+                "Viettel Network, Ha Noi, VN - 27.68.226.129": 35.6,
+                "Viettel Network, Da Nang, VN - 27.68.201.1": 34.4,
+                "Viettel Network, Ho Chi Minh, VN - 27.68.239.33": 62.3,
+                "FPT Telecom, Ho Chi Minh, VN - 118.70.71.215": 22.6
+            }
+        }
+    ],
+    "GCP": [
+        {
+            "name": "e2.xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" },
+            "cpu_benchmark":{ 
+                "CPU Mark": 2773,
+                "Integer Math": 7568,         
+                "Floating Point Math": 5094 ,  
+                "Prime Numbers": 23468284,
+                "Sorting": 5290807,
+                "Encryption": 754680255,    
+                "Compression": 39192372,     
+                "CPU Single Threaded": 1874, 
+                "Extended Instructions(SSE)": 1874
+            },
+            "ram_benchmark": { 
+                "Database Operation": 1211.2965990655634,
+                "Memory Read Cached": 22889.8388671875,         
+                "Memory Read Uncached": 8376.61083984375,  
+                "Memory Write": 7856.632080078125,
+                "Available RAM": 12904,
+                "Memory Latency": 58.454823220609541,    
+                "Memory Threaded": 39508.554565429688
+            }, 
+            "filesystem_benchmark" : { 
+                "Write performance": 2760269,
+                "Re-write performance": 3652942,         
+                "Read performance": 6977198 ,  
+                "Re_read performance": 7116031,
+                "Random-write performance": 3971214,
+                "Random-read performance": 7054848
+            },
+
+            "disk_benchmark" : { 
+                "Random read performance": 3058,
+                "Random write performance": 2687,         
+                "Sequential read perfomance": 131,  
+                "Sequential write performance": 130
+            },
+
+            "network_benchmark" : { 
+                "CacheFly - 204.93.150.152": 282,
+                "Vultr, Los Angeles, CA - 108.61.219.200": 6.75,
+                "Vultr, Seattle, WA - 108.61.194.105" : 8.76,
+                "Linode, Tokyo, JP - 139.162.65.37"  : 20.7,
+                "Linode, Singapore, SG - 139.162.23.4"   : 246,
+                "Softlayer, HongKong, CN - 119.81.130.170" : 33.8,
+                "VNPT, Ha Noi, VN - 113.164.24.102": 15.5,
+                "VNPT, Da Nang, VN - 113.164.16.66": 11.1,
+                "VNPT, Ho Chi Minh, VN - 113.164.8.250": 16.5,
+                "Viettel Network, Ha Noi, VN - 27.68.226.129": 35.6,
+                "Viettel Network, Da Nang, VN - 27.68.201.1": 34.4,
+                "Viettel Network, Ho Chi Minh, VN - 27.68.239.33": 62.3,
+                "FPT Telecom, Ho Chi Minh, VN - 118.70.71.215": 22.6
+            }
+
+        },
+        {
+            "name": "e2.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" },
+            "cpu_benchmark":{ 
+                "CPU Mark": 2772,
+                "Integer Math": 7568,         
+                "Floating Point Math": 5094 ,  
+                "Prime Numbers": 23468284,
+                "Sorting": 5290807,
+                "Encryption": 754680255,    
+                "Compression": 39192372,     
+                "CPU Single Threaded": 1874, 
+                "Extended Instructions(SSE)": 1874
+            },
+            "ram_benchmark": { 
+                "Database Operation": 1211.2965990655634,
+                "Memory Read Cached": 22889.8388671875,         
+                "Memory Read Uncached": 8376.61083984375,  
+                "Memory Write": 7856.632080078125,
+                "Available RAM": 12904,
+                "Memory Latency": 58.454823220609541,    
+                "Memory Threaded": 39508.554565429688
+            }, 
+            "filesystem_benchmark" : { 
+                "Write performance": 2760269,
+                "Re-write performance": 3652942,         
+                "Read performance": 6977198 ,  
+                "Re_read performance": 7116031,
+                "Random-write performance": 3971214,
+                "Random-read performance": 7054848
+            },
+            "disk_benchmark" : { 
+                "Random read performance": 3058,
+                "Random write performance": 2687,         
+                "Sequential read perfomance": 131,  
+                "Sequential write performance": 130
+            },
+
+            "network_benchmark" : { 
+                "CacheFly - 204.93.150.152": 282,
+                "Vultr, Los Angeles, CA - 108.61.219.200": 6.75,
+                "Vultr, Seattle, WA - 108.61.194.105" : 8.76,
+                "Linode, Tokyo, JP - 139.162.65.37"  : 20.7,
+                "Linode, Singapore, SG - 139.162.23.4"   : 246,
+                "Softlayer, HongKong, CN - 119.81.130.170" : 33.8,
+                "VNPT, Ha Noi, VN - 113.164.24.102": 15.5,
+                "VNPT, Da Nang, VN - 113.164.16.66": 11.1,
+                "VNPT, Ho Chi Minh, VN - 113.164.8.250": 16.5,
+                "Viettel Network, Ha Noi, VN - 27.68.226.129": 35.6,
+                "Viettel Network, Da Nang, VN - 27.68.201.1": 34.4,
+                "Viettel Network, Ho Chi Minh, VN - 27.68.239.33": 62.3,
+                "FPT Telecom, Ho Chi Minh, VN - 118.70.71.215": 22.6
+            }
+        }
+
+    ],
+    "TC":  [
+        {
+            "name": "cn3.large",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" },
+            "cpu_benchmark":{ 
+                "CPU Mark": 2773,
+                "Integer Math": 7568,         
+                "Floating Point Math": 5094 ,  
+                "Prime Numbers": 23468284,
+                "Sorting": 5290807,
+                "Encryption": 754680255,    
+                "Compression": 39192372,     
+                "CPU Single Threaded": 1874, 
+                "Extended Instructions(SSE)": 1874
+            },
+            "ram_benchmark": { 
+                "Database Operation": 1211.2965990655634,
+                "Memory Read Cached": 22889.8388671875,         
+                "Memory Read Uncached": 8376.61083984375,  
+                "Memory Write": 7856.632080078125,
+                "Available RAM": 12904,
+                "Memory Latency": 58.454823220609541,    
+                "Memory Threaded": 39508.554565429688
+            }, 
+            "filesystem_benchmark" : { 
+                "Write performance": 2760269,
+                "Re-write performance": 3652942,         
+                "Read performance": 6977198 ,  
+                "Re_read performance": 7116031,
+                "Random-write performance": 3971214,
+                "Random-read performance": 7054848
+            },
+
+            "disk_benchmark" : { 
+                "Random read performance": 3058,
+                "Random write performance": 2687,         
+                "Sequential read perfomance": 131,  
+                "Sequential write performance": 130
+            },
+
+            "network_benchmark" : { 
+                "CacheFly - 204.93.150.152": 282,
+                "Vultr, Los Angeles, CA - 108.61.219.200": 6.75,
+                "Vultr, Seattle, WA - 108.61.194.105" : 8.76,
+                "Linode, Tokyo, JP - 139.162.65.37"  : 20.7,
+                "Linode, Singapore, SG - 139.162.23.4"   : 246,
+                "Softlayer, HongKong, CN - 119.81.130.170" : 33.8,
+                "VNPT, Ha Noi, VN - 113.164.24.102": 15.5,
+                "VNPT, Da Nang, VN - 113.164.16.66": 11.1,
+                "VNPT, Ho Chi Minh, VN - 113.164.8.250": 16.5,
+                "Viettel Network, Ha Noi, VN - 27.68.226.129": 35.6,
+                "Viettel Network, Da Nang, VN - 27.68.201.1": 34.4,
+                "Viettel Network, Ho Chi Minh, VN - 27.68.239.33": 62.3,
+                "FPT Telecom, Ho Chi Minh, VN - 118.70.71.215": 22.6
+            }
+        },
+        {
+            "name": "cn3.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" },
+            "cpu_benchmark":{ 
+                "CPU Mark": 2773,
+                "Integer Math": 7568,         
+                "Floating Point Math": 5094 ,  
+                "Prime Numbers": 23468284,
+                "Sorting": 5290807,
+                "Encryption": 754680255,    
+                "Compression": 39192372,     
+                "CPU Single Threaded": 1874, 
+                "Extended Instructions(SSE)": 1874
+            },
+            "ram_benchmark": { 
+                "Database Operation": 1211.2965990655634,
+                "Memory Read Cached": 22889.8388671875,         
+                "Memory Read Uncached": 8376.61083984375,  
+                "Memory Write": 7856.632080078125,
+                "Available RAM": 12904,
+                "Memory Latency": 58.454823220609541,    
+                "Memory Threaded": 39508.554565429688
+            }, 
+            "filesystem_benchmark" : { 
+                "Write performance": 2760269,
+                "Re-write performance": 3652942,         
+                "Read performance": 6977198 ,  
+                "Re_read performance": 7116031,
+                "Random-write performance": 3971214,
+                "Random-read performance": 7054848
+            },
+
+            "disk_benchmark" : { 
+                "Random read performance": 3058,
+                "Random write performance": 2687,         
+                "Sequential read perfomance": 131,  
+                "Sequential write performance": 130
+            },
+
+            "network_benchmark" : { 
+                "CacheFly - 204.93.150.152": 282,
+                "Vultr, Los Angeles, CA - 108.61.219.200": 6.75,
+                "Vultr, Seattle, WA - 108.61.194.105" : 8.76,
+                "Linode, Tokyo, JP - 139.162.65.37"  : 20.7,
+                "Linode, Singapore, SG - 139.162.23.4"   : 246,
+                "Softlayer, HongKong, CN - 119.81.130.170" : 33.8,
+                "VNPT, Ha Noi, VN - 113.164.24.102": 15.5,
+                "VNPT, Da Nang, VN - 113.164.16.66": 11.1,
+                "VNPT, Ho Chi Minh, VN - 113.164.8.250": 16.5,
+                "Viettel Network, Ha Noi, VN - 27.68.226.129": 35.6,
+                "Viettel Network, Da Nang, VN - 27.68.201.1": 34.4,
+                "Viettel Network, Ho Chi Minh, VN - 27.68.239.33": 62.3,
+                "FPT Telecom, Ho Chi Minh, VN - 118.70.71.215": 22.6
+            }
+        }
+    ]
+}

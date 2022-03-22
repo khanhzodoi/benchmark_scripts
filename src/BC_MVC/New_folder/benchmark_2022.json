@@ -1,0 +1,99 @@
+
+{
+    "AWS": [
+        {
+            "name": "c4.large",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" },
+            "cpu_monthly_benchmark": [
+                { "Month": "Jan", "CPU": [],"Sales_Figure": 21, "Perc": 5 },
+                { "Month": "Feb", "Sales_Figure": 32, "Perc": 15 },
+                { "Month": "Mar", "Sales_Figure": 19, "Perc": 11 },
+                { "Month": "Apr", "Sales_Figure": 8, "Perc": 17 },
+                { "Month": "May", "Sales_Figure": 26, "Perc": 5 },
+                { "Month": "Jun", "Sales_Figure": 31, "Perc": 2 },
+                { "Month": "Jul", "Sales_Figure": 37, "Perc": 28 },
+                { "Month": "Aug", "Sales_Figure": 16, "Perc": 14 },
+                { "Month": "Sep", "Sales_Figure": 25, "Perc": 19 },
+                { "Month": "Oct", "Sales_Figure": 30, "Perc": 8 }
+            ],
+            "ram_monthly_benchmark": [
+                { "Month": "Jan", "CPU": [],"Sales_Figure": 21, "Perc": 5 },
+                { "Month": "Feb", "Sales_Figure": 32, "Perc": 15 },
+                { "Month": "Mar", "Sales_Figure": 19, "Perc": 11 },
+                { "Month": "Apr", "Sales_Figure": 8, "Perc": 17 },
+                { "Month": "May", "Sales_Figure": 26, "Perc": 5 },
+                { "Month": "Jun", "Sales_Figure": 31, "Perc": 2 },
+                { "Month": "Jul", "Sales_Figure": 37, "Perc": 28 },
+                { "Month": "Aug", "Sales_Figure": 16, "Perc": 14 },
+                { "Month": "Sep", "Sales_Figure": 25, "Perc": 19 },
+                { "Month": "Oct", "Sales_Figure": 30, "Perc": 8 }
+            ],
+            "disk_monthly_benchmark" : [
+                { "Month": "Jan", "CPU": [],"Sales_Figure": 21, "Perc": 5 },
+                { "Month": "Feb", "Sales_Figure": 32, "Perc": 15 },
+                { "Month": "Mar", "Sales_Figure": 19, "Perc": 11 },
+                { "Month": "Apr", "Sales_Figure": 8, "Perc": 17 },
+                { "Month": "May", "Sales_Figure": 26, "Perc": 5 },
+                { "Month": "Jun", "Sales_Figure": 31, "Perc": 2 },
+                { "Month": "Jul", "Sales_Figure": 37, "Perc": 28 },
+                { "Month": "Aug", "Sales_Figure": 16, "Perc": 14 },
+                { "Month": "Sep", "Sales_Figure": 25, "Perc": 19 },
+                { "Month": "Oct", "Sales_Figure": 30, "Perc": 8 }
+            ],
+
+            "filesystem_monthly_benchmark" : [
+                { "Month": "Jan", "CPU": [],"Sales_Figure": 21, "Perc": 5 },
+                { "Month": "Feb", "Sales_Figure": 32, "Perc": 15 },
+                { "Month": "Mar", "Sales_Figure": 19, "Perc": 11 },
+                { "Month": "Apr", "Sales_Figure": 8, "Perc": 17 },
+                { "Month": "May", "Sales_Figure": 26, "Perc": 5 },
+                { "Month": "Jun", "Sales_Figure": 31, "Perc": 2 },
+                { "Month": "Jul", "Sales_Figure": 37, "Perc": 28 },
+                { "Month": "Aug", "Sales_Figure": 16, "Perc": 14 },
+                { "Month": "Sep", "Sales_Figure": 25, "Perc": 19 },
+                { "Month": "Oct", "Sales_Figure": 30, "Perc": 8 }
+            ],
+
+            "network_monthly_benchmark" : [
+                { "Month": "Jan", "CPU": [],"Sales_Figure": 21, "Perc": 5 },
+                { "Month": "Feb", "Sales_Figure": 32, "Perc": 15 },
+                { "Month": "Mar", "Sales_Figure": 19, "Perc": 11 },
+                { "Month": "Apr", "Sales_Figure": 8, "Perc": 17 },
+                { "Month": "May", "Sales_Figure": 26, "Perc": 5 },
+                { "Month": "Jun", "Sales_Figure": 31, "Perc": 2 },
+                { "Month": "Jul", "Sales_Figure": 37, "Perc": 28 },
+                { "Month": "Aug", "Sales_Figure": 16, "Perc": 14 },
+                { "Month": "Sep", "Sales_Figure": 25, "Perc": 19 },
+                { "Month": "Oct", "Sales_Figure": 30, "Perc": 8 }
+            ]
+
+
+        },
+        {
+            "name": "c4.xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        }
+    ],
+    "GCP": [
+        {
+            "name": "e2.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+
+        },
+        {
+            "name": "e2.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        }
+
+    ],
+    "TENCENT CLOUD":  [
+        {
+            "name": "cn3.large",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        },
+        {
+            "name": "cn3.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        }
+    ]
+}

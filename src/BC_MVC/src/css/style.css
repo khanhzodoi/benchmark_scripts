@@ -1,0 +1,148 @@
+/* styles */
+
+
+a {
+  color: #3b5998;
+}
+
+.navbar {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  height: 90px; /**/
+  margin-bottom: 0px;
+}
+
+.navbar-default {
+  background-color: #3b5998;
+  border-color: #3b5998;
+}
+
+.navbar-default .navbar-brand {
+  color: #fff;
+}
+
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:hover {
+  color: #fff;
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #fff;
+}
+
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-nav>li>a:hover {
+  color: #fff;
+}
+
+/*===============================================================*/
+#main {
+  /* margin: 0 auto;
+  width: 600px; */
+  text-align: center;
+}
+
+#newpostbtn{
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5%;
+  background-color:#09F;
+  color: #fff;
+}
+
+#frmaddnewpost{
+  display: none;
+
+}
+.post{
+  background-color: #f2f2f2;
+  margin-bottom: 45px;
+  border-color: papayawhip;
+  border-style: groove;
+}
+.image-box{
+  border-top:#F0F0F0 2px solid;
+  padding:10px;
+  margin: 10px;
+  border-style: inset;
+  background-color: #fff;
+}
+#btnAddAction{
+  background-color:#09F;
+  font-size: 20px;
+  border:0;
+  padding:5px 10px;
+  color:#FFF;
+  border-radius: 5%;
+}
+.message-box{
+  margin-bottom:20px;
+  padding:10px;
+}
+.message-content{
+  width: 500px;
+  margin: 0 auto;
+  text-align: justify;
+}
+
+.btnEditAction{
+  background-color:#2FC332;
+  border:0;
+  padding:2px 10px;
+  color:#FFF;
+}
+.btnDeleteAction{
+  background-color:#D60202;
+  border:0;padding:2px 10px;
+  color:#FFF;
+  margin-bottom:15px;
+}
+
+.submit{
+  font-size: 16px;
+  background: linear-gradient(#ffbc00 5%, #ffdd7f 100%);
+  border: 1px solid #e5a900;
+  color: #4E4D4B;
+  font-weight: bold;
+  cursor: pointer;
+  width: 300px;
+  border-radius: 5px;
+  padding: 10px 0;
+  outline: none;
+  margin-top: 20px;
+}
+.submit:hover{
+  background: linear-gradient(#ffdd7f 5%, #ffbc00 100%);
+}
+.file {
+  color: red;
+  padding: 5px;
+  border: 5px solid #8BF1B0;
+  background-color: #8BF1B0;
+  margin-top: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 15px #626F7E;
+  width: 72%;
+}
+#success {
+  color:green;
+}
+
+#invalid {
+  color:red;
+}
+
+#loading {
+display:none;
+position:absolute;
+top:50px;
+left:850px;
+font-size:25px;
+}
+#error {
+  color:red;
+}
+
+/*======================================*/
+

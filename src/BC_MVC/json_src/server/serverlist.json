@@ -1,0 +1,34 @@
+
+{
+    "AWS": [
+        {
+            "name": "c4.large",
+            "metadata": { "vCPU": 3 , "RAM": 4, "Disk": "40 GB" }
+        },
+        {
+            "name": "c4.xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        }
+    ],
+    "GCP": [
+        {
+            "name": "e2.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        },
+        {
+            "name": "e2.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        }
+
+    ],
+    "TENCENT CLOUD":  [
+        {
+            "name": "cn3.large",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        },
+        {
+            "name": "cn3.2xlarge",
+            "metadata": { "vCPU": 2, "RAM": 4, "Disk": "40 GB" }
+        }
+    ]
+}
